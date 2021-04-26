@@ -3,7 +3,7 @@
 </h3>
 
 <h2 align="center">My Items</h2><br/>
-<h4>&emsp;*<%= link_to "Create NEW Item", "/merchants/#{@merchant.id}/items/new" %>
+<h5>&emsp;*<%= link_to "Create NEW Item", "/merchants/#{@merchant.id}/items/new" %></h5>
 
 <style>
 .column {
@@ -18,13 +18,13 @@
     <h3>Enabled Items</h3>
     <% @enabled_items.each do |item| %>
         <h4>&emsp;<%= link_to "#{item.name}", "/items/#{item.id}" %></h4>
-        <%= button_to("Disabled", "/items/#{item.id}", :params => {able: "Disabled"}, method: :patch) %>
+        <%= button_to("Disabled", "/items/#{item.id}", :params => {able: "Disable"}, method: :patch) %>
     <% end %></br>
 
     <h3>Disabled Items</h3>
     <% @disabled_items.each do |item| %>
         <h4>&emsp;  <%= link_to "#{item.name}", "/items/#{item.id}" %></h4>
-        <%= button_to("Enabled", "/items/#{item.id}", :params => {able: "Enabled"}, method: :patch) %>
+        <%= button_to("Enable", "/items/#{item.id}", :params => {able: "Enabled"}, method: :patch) %>
     <% end %>
   </div>
 

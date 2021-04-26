@@ -1,45 +1,46 @@
 require 'rails_helper'
 
 RSpec.describe 'the merchant show page', type: :feature do
+  before(:each) do
+    @merchant = Merchant.create(name: 'Bob Cella')
+  end
+
   it "shows the merchant's name" do
+    visit "merchants/#{@merchant.id}/dashboard"
 
-    merchant = Merchant.create(name: 'Bob Cella')
-
-    visit "merchants/#{merchant.id}/dashboard"
-
-    expect(page).to have_content(merchant.name)
+    expect(page).to have_content(@merchant.name)
   end
 
   describe ': there are sight links: and it' do
     it 'has a link to merchants dashboard' do
-      merchant = Merchant.create(name: 'Bob Cella')
-      visit "/merchants/#{merchant.id}/items"
+      visit "/merchants/#{@merchant.id}/items"
+
       within ("#links") do
         expect(page).to have_link("Dashboard")
         click_link("Dashboard")
-        expect(current_path).to eq("/merchants/#{merchant.id}/dashboard")
+        expect(current_path).to eq("/merchants/#{@merchant.id}/dashboard")
+
+        expect(page).to have_link("click to bulk discounts")
+        click_link("click to bulk discounts")
+        expect(current_path).to eq("/merchants/#{@merchant.id}/discounts")
       end
     end
 
     it 'has a link to merchant items' do
-      merchant = Merchant.create(name: 'Bob Cella')
-
-      visit "/merchants/#{merchant.id}/items"
+      visit "/merchants/#{@merchant.id}/items"
       within ("#links") do
         expect(page).to have_link("My Items")
         click_link("My Items")
-        expect(current_path).to eq("/merchants/#{merchant.id}/items")
+        expect(current_path).to eq("/merchants/#{@merchant.id}/items")
       end
     end
 
     it 'has a link to merchant invoices' do
-      merchant = Merchant.create(name: 'Bob Cella')
-
-      visit "/merchants/#{merchant.id}/items"
+      visit "/merchants/#{@merchant.id}/items"
       within ("#links") do
         expect(page).to have_link("My Invoices")
         click_link("My Invoices")
-        expect(current_path).to eq("/merchants/#{merchant.id}/invoices")
+        expect(current_path).to eq("/merchants/#{@merchant.id}/invoices")
       end
     end
   end
@@ -47,11 +48,9 @@ RSpec.describe 'the merchant show page', type: :feature do
   describe "the merchant's top 5 customers" do
     it "shows top 5 customers" do
 
-      merchant = Merchant.create(name: 'Bob Cella')
-
-      item_a = merchant.items.create!(name: "thing", description: "item of a thing", unit_price: 100)
-      item_b = merchant.items.create!(name: "stuff", description: "bla bla bla", unit_price: 50)
-      item_c = merchant.items.create!(name: "doo-hicky", description: "stuffy stuff", unit_price: 200)
+      item_a = @merchant.items.create!(name: "thing", description: "item of a thing", unit_price: 100)
+      item_b = @merchant.items.create!(name: "stuff", description: "bla bla bla", unit_price: 50)
+      item_c = @merchant.items.create!(name: "doo-hicky", description: "stuffy stuff", unit_price: 200)
 
       customer_a = Customer.create!(first_name: "albert", last_name: "anderston")
       customer_b = Customer.create!(first_name: "billy", last_name: "baxter")
@@ -154,7 +153,7 @@ RSpec.describe 'the merchant show page', type: :feature do
       invoice_item_3h = InvoiceItem.create!(quantity: 5, unit_price: 100, status: 1, invoice_id: invoice_3h.id, item_id: item_c.id)
 
 
-      visit "merchants/#{merchant.id}/dashboard"
+      visit "merchants/#{@merchant.id}/dashboard"
 
       expect(page).to have_content("#{customer_a.first_name} #{customer_a.last_name}")
       expect(page).to have_content("#{customer_b.first_name} #{customer_b.last_name}")
@@ -165,11 +164,9 @@ RSpec.describe 'the merchant show page', type: :feature do
 
     it "shows number of sucessful transactions" do
 
-      merchant = Merchant.create(name: 'Bob Cella')
-
-      item_a = merchant.items.create!(name: "thing", description: "item of a thing", unit_price: 100)
-      item_b = merchant.items.create!(name: "stuff", description: "bla bla bla", unit_price: 50)
-      item_c = merchant.items.create!(name: "doo-hicky", description: "stuffy stuff", unit_price: 200)
+      item_a = @merchant.items.create!(name: "thing", description: "item of a thing", unit_price: 100)
+      item_b = @merchant.items.create!(name: "stuff", description: "bla bla bla", unit_price: 50)
+      item_c = @merchant.items.create!(name: "doo-hicky", description: "stuffy stuff", unit_price: 200)
 
       customer_a = Customer.create!(first_name: "albert", last_name: "anderston")
       customer_b = Customer.create!(first_name: "billy", last_name: "baxter")
@@ -272,7 +269,7 @@ RSpec.describe 'the merchant show page', type: :feature do
       invoice_item_3h = InvoiceItem.create!(quantity: 5, unit_price: 100, status: 1, invoice_id: invoice_3h.id, item_id: item_c.id)
 
 
-      visit "merchants/#{merchant.id}/dashboard"
+      visit "merchants/#{@merchant.id}/dashboard"
 
       expect(page).to have_content("#{3}")
       expect(page).to have_content("#{3}")
@@ -283,14 +280,12 @@ RSpec.describe 'the merchant show page', type: :feature do
   end
 
   describe "display item's ready to ship" do
-    it " lits items ready to ship" do
+    it "lists items ready to ship" do
 
-      merchant = Merchant.create(name: 'Bob Cella')
-
-      item_a = merchant.items.create!(name: "thing", description: "item of a thing", unit_price: 100)
-      item_b = merchant.items.create!(name: "stuff", description: "bla bla bla", unit_price: 50)
-      item_c = merchant.items.create!(name: "doo-hicky", description: "stuffy stuff", unit_price: 200)
-      item_d = merchant.items.create!(name: "cool toy", description: "zappow", unit_price: 200)
+      item_a = @merchant.items.create!(name: "thing", description: "item of a thing", unit_price: 100)
+      item_b = @merchant.items.create!(name: "stuff", description: "bla bla bla", unit_price: 50)
+      item_c = @merchant.items.create!(name: "doo-hicky", description: "stuffy stuff", unit_price: 200)
+      item_d = @merchant.items.create!(name: "cool toy", description: "zappow", unit_price: 200)
 
       customer_a = Customer.create!(first_name: "albert", last_name: "anderston")
       customer_b = Customer.create!(first_name: "billy", last_name: "baxter")
@@ -319,8 +314,7 @@ RSpec.describe 'the merchant show page', type: :feature do
       invoice_item_2c = InvoiceItem.create!(quantity: 5, unit_price: 100, status: 1, invoice_id: invoice_2c.id, item_id: item_b.id)
       invoice_item_3c = InvoiceItem.create!(quantity: 5, unit_price: 100, status: 2, invoice_id: invoice_3c.id, item_id: item_c.id)
 
-
-      visit "merchants/#{merchant.id}/dashboard"
+      visit "merchants/#{@merchant.id}/dashboard"
 
       expect(page).to have_content("#{item_a.name}")
       expect(page).to have_content("#{item_b.name}")
@@ -328,14 +322,12 @@ RSpec.describe 'the merchant show page', type: :feature do
       expect(page).to have_no_content("#{item_d.name}")
     end
 
-    it " items are listed in order of invoice creation" do
+    it "lists items in order of invoice creation" do
 
-      merchant = Merchant.create(name: 'Bob Cella')
-
-      item_a = merchant.items.create!(name: "thing", description: "item of a thing", unit_price: 100)
-      item_b = merchant.items.create!(name: "stuff", description: "bla bla bla", unit_price: 50)
-      item_c = merchant.items.create!(name: "doo-hicky", description: "stuffy stuff", unit_price: 200)
-      item_d = merchant.items.create!(name: "cool toy", description: "zappow", unit_price: 200)
+      item_a = @merchant.items.create!(name: "thing", description: "item of a thing", unit_price: 100)
+      item_b = @merchant.items.create!(name: "stuff", description: "bla bla bla", unit_price: 50)
+      item_c = @merchant.items.create!(name: "doo-hicky", description: "stuffy stuff", unit_price: 200)
+      item_d = @merchant.items.create!(name: "cool toy", description: "zappow", unit_price: 200)
 
       customer_a = Customer.create!(first_name: "albert", last_name: "anderston")
       customer_b = Customer.create!(first_name: "billy", last_name: "baxter")
@@ -355,7 +347,7 @@ RSpec.describe 'the merchant show page', type: :feature do
       invoice_item_2b = InvoiceItem.create!(quantity: 5, unit_price: 100, status: 1, invoice_id: invoice_2b.id, item_id: item_b.id)
 
 
-      visit "merchants/#{merchant.id}/dashboard"
+      visit "merchants/#{@merchant.id}/dashboard"
 
       first = find("#item-#{invoice_1a.id}-#{item_a.name}")
       second = find("#item-#{invoice_2a.id}-#{item_c.name}")
@@ -368,29 +360,25 @@ RSpec.describe 'the merchant show page', type: :feature do
       expect(third).to appear_before(fourth)
     end
 
-    it ' has invoice id number as a link' do
+    it 'has invoice id number as a link' do
 
-      merchant = Merchant.create(name: 'Bob Cella')
-      item_a = merchant.items.create!(name: "thing", description: "item of a thing", unit_price: 100)
+      item_a = @merchant.items.create!(name: "thing", description: "item of a thing", unit_price: 100)
       customer_a = Customer.create!(first_name: "albert", last_name: "anderston")
       invoice_1a = customer_a.invoices.create!(status: 0)
       invoice_item_1a = InvoiceItem.create!(quantity: 5, unit_price: 100, status: 0, invoice_id: invoice_1a.id, item_id: item_a.id)
 
-      visit "/merchants/#{merchant.id}/dashboard"
-
+      visit "/merchants/#{@merchant.id}/dashboard"
       click_link("#{invoice_1a.id}")
 
-      expect(page).to have_current_path("/merchants/#{merchant.id}/invoices/#{invoice_1a.id}")
+      expect(page).to have_current_path("/merchants/#{@merchant.id}/invoices/#{invoice_1a.id}")
     end
 
-    it ' has date of invoices' do
+    it 'has date of invoices' do
 
-      merchant = Merchant.create(name: 'Bob Cella')
-
-      item_a = merchant.items.create!(name: "thing", description: "item of a thing", unit_price: 100)
-      item_b = merchant.items.create!(name: "stuff", description: "bla bla bla", unit_price: 50)
-      item_c = merchant.items.create!(name: "doo-hicky", description: "stuffy stuff", unit_price: 200)
-      item_d = merchant.items.create!(name: "cool toy", description: "zappow", unit_price: 200)
+      item_a = @merchant.items.create!(name: "thing", description: "item of a thing", unit_price: 100)
+      item_b = @merchant.items.create!(name: "stuff", description: "bla bla bla", unit_price: 50)
+      item_c = @merchant.items.create!(name: "doo-hicky", description: "stuffy stuff", unit_price: 200)
+      item_d = @merchant.items.create!(name: "cool toy", description: "zappow", unit_price: 200)
 
       customer_a = Customer.create!(first_name: "albert", last_name: "anderston")
       customer_b = Customer.create!(first_name: "billy", last_name: "baxter")
@@ -408,15 +396,12 @@ RSpec.describe 'the merchant show page', type: :feature do
       invoice_item_2b = InvoiceItem.create!(quantity: 5, unit_price: 100, status: 1, invoice_id: invoice_2b.id, item_id: item_b.id)
 
 
-      visit "/merchants/#{merchant.id}/dashboard"
+      visit "/merchants/#{@merchant.id}/dashboard"
 
       expect(page).to have_content(invoice_1a.created_at.strftime("%A, %B %d, %Y"))
       expect(page).to have_content(invoice_2a.created_at.strftime("%A, %B %d, %Y"))
       expect(page).to have_content(invoice_1b.created_at.strftime("%A, %B %d, %Y"))
       expect(page).to have_content(invoice_2b.created_at.strftime("%A, %B %d, %Y"))
-
-
     end
-
   end
 end

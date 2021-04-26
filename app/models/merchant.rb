@@ -3,6 +3,7 @@ class Merchant < ApplicationRecord
   validates :status, presence: true
 
   has_many :items, dependent: :destroy
+  has_many :discounts, dependent: :destroy
 
   enum status: [ :enabled, :disabled ]
 

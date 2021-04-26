@@ -1,0 +1,12 @@
+<h3 align="right"><%= render partial: 'partials/merch_header' %>&emsp;</h3>
+
+<h3>Edit Item</h3><br/>
+<%= form_with url:"merchants/#{@merchant.id}/discounts/#{@discount.id}", method: :patch, local: true do |f| %>
+  <%= f.label 'Percentage' %>
+  <%= f.number_field :percent, value: "#{@discount.percent}" %><br/><br/>
+
+  <%= f.label 'Max Quantity' %>
+  <%= f.number_field :quantity, value: "#{@discount.quantity}" %><br/><br/>
+
+  <%= f.submit 'Submit Edit' %>
+<% end %>

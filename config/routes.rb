@@ -5,7 +5,13 @@ Rails.application.routes.draw do
   
   resources :merchants, only: [:index] do
     resources :items, shallow: true
-  end
+    resources :discounts  #only: [:index, :show]
+  end       #nested  :index,:new,:create
+  # resources :items, only: [:show, :edit, :update]
+
+###### Merchant Invoices routes below ######
+
+########## Admin routes below ##############
  
   get "/merchants/:id/dashboard", to: 'merchants#show'
   get "/merchants/:id/invoices", to: 'merchants#invoice_index'

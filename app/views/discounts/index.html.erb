@@ -1,0 +1,22 @@
+<section id="links">
+  <h3 style="text-align:left;">
+      &emsp;<%= link_to "Create New Discount", "/merchants/#{@merchant.id}/discounts/new" %><span style="float:right;"><%= link_to "Merchant Dashboard", "/merchants/#{@merchant.id}" %>&emsp;</span>
+  </h3>
+</section>
+
+<section id="disc_index">
+  <h2>Discounts Index</h2>
+  <% @discounts.each do |discount| %>
+    <div id="discount-<%= discount.id %>">
+      &emsp;Discount _ Percent Off %<%= link_to "#{discount.percent}", "/merchants/#{@merchant.id}/discounts/#{discount.id}" %>:&emsp;&emsp;Quantity Threshold:&emsp;<%= discount.quantity %> (items max)
+
+    </div>
+  <% end %><br/>
+</section>
+
+<section id="holidays">
+  <h2>Upcoming Holidays</h2>
+    <%# @three_holidays.each do |holiday| %>
+    <%# end %>
+
+</section>

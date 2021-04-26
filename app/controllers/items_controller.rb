@@ -15,7 +15,7 @@ class ItemsController < ApplicationController
 
   def create
     @merchant = Merchant.find(params[:merchant_id])
-    item = Item.new({name: params[:name], description: params[:description], unit_price: params[:unit_price], able: params[:able], merchant_id: @merchant.id})
+    item = @merchant.items.new({name: params[:name], description: params[:description], unit_price: params[:unit_price], able: params[:able]})
     if item.save
       redirect_to "/merchants/#{@merchant.id}/items"
     else
@@ -48,7 +48,8 @@ class ItemsController < ApplicationController
     end
     if item.save
       flash[:notice] = "Item was successfully updated."
-      redirect_to "/merchants/#{@merchant.id}/items/#{item.id}"
+      redirect_to "/merchants/#{@merchant.id}/items"
+      # redirect_to "/merchants/#{@merchant.id}/items/#{item.id}"  #NOW  /items/#{item.id}
     else
       flash[:alert] = "ERROR: Item not updated."
       redirect_to "/items/#{item.id}/edit"
